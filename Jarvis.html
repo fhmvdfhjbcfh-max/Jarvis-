@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My JARVIS</title>
+</head>
+
+<body>
+<h1>🤖 My JARVIS</h1>
+
+<button onclick="startListening()">🎤 Bolo JARVIS</button>
+
+<p id="status">Ready...</p>
+<p id="answer"></p>
+
+<script>
+const SpeechRecognition =
+window.SpeechRecognition || window.webkitSpeechRecognition;
+
+if (!SpeechRecognition) {
+    document.getElementById("status").innerText =
+    "Is browser mein voice recognition support nahi hai.";
+} else {
+
+const recognition = new SpeechRecognition();
+
+recognition.lang = "hi-IN";
+recognition.continuous = false;
+recognition.interimResults = false;
+
+function startListening() {
+    document.getElementById("status").innerText =
+    "🎤 Haan, main sun raha hoon...";
+
+    recognition.start();
+}
+
+recognition.onresult = function(event) {
+
+    const text = event.results[0][0].transcript.toLowerCase();
+
+    document.getElementById("status").innerText =
+    "Tumne kaha: " + text;
+
+    let reply = "Mujhe samajh nahi aaya.";
+
+    if (text.includes("hello") ||
+        text.includes("हेलो") ||
+        text.includes("hlo")) {
+
+        reply = "Hello! Main tumhara JARVIS hoon.";
+    }
+
+    else if (text.includes("kaise ho") ||
+             text.includes("कैसे हो")) {
+
+        reply = "Main bilkul theek hoon. Tum kaise ho?";
+    }
+
+    document.getElementById("answer").innerText = reply;
+
+    const speech = new SpeechSynthesisUtterance(reply);
+
+    speech.lang = "hi-IN";
+
+    window.speechSynthesis.speak(speech);
+};
+
+recognition.onerror = function(event) {
+    document.getElementById("status").innerText =
+    "❌ Error: " + event.error;
+};
+
+recognition.onend = function() {
+    console.log("Listening ended");
+};
+
+}
+</script>
+
+</body>
+</html>
